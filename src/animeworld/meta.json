@@ -7,6 +7,14 @@
   "sandbox": "DOM",
   "inject-into": "content",
   "grant": [
-    "GM_download"
-  ]
+    "GM_download",
+    "GM_xmlhttpRequest"
+  ],
+  "connect": [
+    "animeworld.ac",
+    "www.animeworld.ac",
+    "*"
+  ],
+  "updateURL": "https://github.com/Giglium/domus-userscripts/raw/refs/heads/main/dist//dist/animeworld/meta.json",
+  "downloadURL": "https://github.com/Giglium/domus-userscripts/raw/refs/heads/main/dist/animeworld.user.js"
 }

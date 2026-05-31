@@ -4,34 +4,44 @@ import { createDownloadButton } from "../lib/dom/downloadButton.js";
 import { findVideoUrl } from "../lib/dom/videoFinder.js";
 
 bootstrap(() => {
-  const btn = createDownloadButton(() => {
-    const url = findVideoUrl();
+  const btn = createDownloadButton(async () => {
+    btn.classList.add("is-loading");
 
-    if (!url) {
-      alert(
-        "Could not find the video URL. Try playing the video first, then click download again.",
-      );
-      return;
-    }
+    try {
+      const url = await findVideoUrl();
 
-    const filename = getFilename(url);
+      if (!url) {
+        alert(
+          "Could not find the video URL. Try playing the video first, then click download again.",
+        );
+        return;
+      }
 
-    if (typeof GM_download === "function") {
-      GM_download({
-        url,
-        name: filename,
-        onerror: (err) => {
-          console.error("GM_download failed, falling back to link click", err);
-          fallbackDownload(url, filename);
-        },
-      });
-    } else {
-      fallbackDownload(url, filename);
+      const filename = getFilename(url);
+      downloadFile(url, filename);
+    } catch (err) {
+      console.error("[domus] Error:", err);
+      alert("Error: " + err.message);
+    } finally {
+      btn.classList.remove("is-loading");
     }
   });
 
   document.body.appendChild(btn);
 });
+
+/**
+ * Downloads the file using an anchor element click.
+ */
+function downloadFile(url, filename) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.style.display = "none";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
 
 /**
  * Extracts a filename from the URL or page title.
@@ -50,17 +60,4 @@ function getFilename(url) {
 
   const title = document.title.replace(/[^\w\s-]/g, "").trim();
   return `${title || "video"}.mp4`;
-}
-
-/**
- * Fallback download method using an anchor element.
- */
-function fallbackDownload(url, filename) {
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.style.display = "none";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
 }
