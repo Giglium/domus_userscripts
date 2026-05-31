@@ -1,0 +1,12 @@
+{
+  "name": "AnimeWorld Downloader",
+  "version": "1.0.0",
+  "match": [
+    "https://www.animeworld.ac/play/*"
+  ],
+  "sandbox": "DOM",
+  "inject-into": "content",
+  "grant": [
+    "GM_download"
+  ]
+}

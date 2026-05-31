@@ -1,0 +1,25 @@
+{
+  "name": "domus-userscripts",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Giglium",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Giglium/domus-userscripts.git"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "bulma": "1.0.4",
+    "css-loader": "^7.1.4",
+    "eslint": "^10.03.0",
+    "mini-css-extract-plugin": "^2.10.2",
+    "prettier": "3.3.3",
+    "sass": "^1.99.0",
+    "sass-loader": "^16.0.7",
+    "webpack": "^5.106.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.2",
+    "webpack-monkey": "github:Giglium/webpack-monkey"
+  }
+}

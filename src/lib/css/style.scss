@@ -1,0 +1,27 @@
+/* stylelint-disable at-rule-no-unknown */
+@use "bulma/sass/base";
+@use "bulma/sass/themes";
+@use "bulma/sass/elements/button";
+@use "bulma/sass/elements/notification";
+@use "bulma/sass/elements/title";
+@use "bulma/sass/components/modal";
+@use "bulma/sass/helpers/spacing";
+@use "bulma/sass/helpers/typography";
+
+/* stylelint-enable at-rule-no-unknown */
+
+.domus-download-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 99999;
+}
+
+/*
+ * Single override for the Bulma modal: let the error stack trace wrap and
+ * stay legible. Everything else (layout, colors, typography) is Bulma.
+ */
+.domus-error-overlay__detail {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
