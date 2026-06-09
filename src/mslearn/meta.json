@@ -1,0 +1,12 @@
+{
+  "name": "MS Learn Quiz Extractor",
+  "version": "1.0.0",
+  "match": [
+    "https://learn.microsoft.com/*/training/modules/*"
+  ],
+  "sandbox": "DOM",
+  "inject-into": "content",
+  "grant": [],
+  "updateURL": "https://github.com/Giglium/domus-userscripts/raw/refs/heads/main/dist//dist/mslearn/meta.json",
+  "downloadURL": "https://github.com/Giglium/domus-userscripts/raw/refs/heads/main/dist/mslearn.user.js"
+}

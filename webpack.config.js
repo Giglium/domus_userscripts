@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = monkey({
   entry: {
     animeworld: "./src/animeworld/index.js",
+    mslearn: "./src/mslearn/index.js",
   },
   mode: "production",
   monkey: {

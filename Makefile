@@ -5,7 +5,7 @@ SUPER_LINTER_FMT := -e FIX_MARKDOWN=true -e FIX_JSON=true -e FIX_YAML_PRETTIER=t
 # =============================================================================
 # Publication / Upload settings
 # =============================================================================
-SCRIPTS := animeworld
+SCRIPTS := animeworld mslearn
 
 include ./build-tools/common.mk
 include $(BUILD_TOOLS_FOLDER)/common_linters.mk
