@@ -1,32 +1,32 @@
-import "../lib/css/style.scss";
-import { bootstrap } from "../lib/core/bootstrap.js";
-import { extractQuiz } from "./quizExtractor.js";
+import '../lib/css/style.scss'
+import { bootstrap } from '../lib/core/bootstrap.js'
+import { extractQuiz } from './quizExtractor.js'
 
 bootstrap(() => {
   // Only show the button if quiz questions exist in the DOM
-  const hasQuiz = document.querySelectorAll(
-    ".quiz-question, .module-assessment-question",
-  ).length > 0;
+  const hasQuiz =
+    document.querySelectorAll('.quiz-question, .module-assessment-question')
+      .length > 0
 
   if (!hasQuiz) {
-    return;
+    return
   }
 
   const btn = createDownloadMdButton(() => {
     // Extract at click time so answers are available after submission
-    const questions = extractQuiz();
+    const questions = extractQuiz()
 
     if (questions.length === 0) {
-      alert("No questions found on this page.");
-      return;
+      alert('No questions found on this page.')
+      return
     }
 
-    const md = formatMarkdown(questions);
-    downloadMarkdown(md, getFilename());
-  });
+    const md = formatMarkdown(questions)
+    downloadMarkdown(md, getFilename())
+  })
 
-  document.body.appendChild(btn);
-});
+  document.body.appendChild(btn)
+})
 
 /**
  * Creates a Bulma-styled download button fixed in the top-right corner.
@@ -34,9 +34,9 @@ bootstrap(() => {
  * @param {() => void} onClick
  * @returns {HTMLButtonElement}
  */
-function createDownloadMdButton(onClick) {
-  const btn = document.createElement("button");
-  btn.className = "button is-primary is-medium domus-download-btn";
+function createDownloadMdButton (onClick) {
+  const btn = document.createElement('button')
+  btn.className = 'button is-primary is-medium domus-download-btn'
   btn.innerHTML = `
     <span class="icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -47,10 +47,10 @@ function createDownloadMdButton(onClick) {
       </svg>
     </span>
     <span>Download Notes</span>
-  `;
+  `
 
-  btn.addEventListener("click", onClick);
-  return btn;
+  btn.addEventListener('click', onClick)
+  return btn
 }
 
 /**
@@ -58,22 +58,25 @@ function createDownloadMdButton(onClick) {
  * @param {Array} questions
  * @returns {string}
  */
-function formatMarkdown(questions) {
+function formatMarkdown (questions) {
   return questions
     .map((q) => {
-      let md = `- **Question** ${q.question}\n`;
+      let md = `- **Question** ${q.question}\n`
       for (const option of q.options) {
-        md += `  - ${option}\n`;
+        md += `  - ${option}\n`
       }
-      if (q.answer) {
-        md += `  - **Answer** ${q.answer}\n`;
+      if (q.answer || q.explanation) {
+        md += `  - Answer\n`
+        if (q.answer) {
+          md += `    - **${q.answer}**\n`
+        }
+        if (q.explanation) {
+          md += `    - ${q.explanation}\n`
+        }
       }
-      if (q.explanation) {
-        md += `  - ${q.explanation}\n`;
-      }
-      return md;
+      return md
     })
-    .join("\n");
+    .join('\n')
 }
 
 /**
@@ -81,29 +84,29 @@ function formatMarkdown(questions) {
  * @param {string} content
  * @param {string} filename
  */
-function downloadMarkdown(content, filename) {
-  const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.style.display = "none";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+function downloadMarkdown (content, filename) {
+  const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.style.display = 'none'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
 /**
  * Derives a filename from the page title.
  * @returns {string}
  */
-function getFilename() {
+function getFilename () {
   const title = document.title
-    .replace(/- Training \| Microsoft Learn/i, "")
-    .replace(/[^\w\s-]/g, "")
+    .replace(/- Training \| Microsoft Learn/i, '')
+    .replace(/[^\w\s-]/g, '')
     .trim()
-    .replace(/\s+/g, "-")
-    .toLowerCase();
-  return `${title || "quiz-notes"}.md`;
+    .replace(/\s+/g, '-')
+    .toLowerCase()
+  return `${title || 'quiz-notes'}.md`
 }

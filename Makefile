@@ -5,7 +5,8 @@ SUPER_LINTER_FMT := -e FIX_MARKDOWN=true -e FIX_JSON=true -e FIX_YAML_PRETTIER=t
 # =============================================================================
 # Publication / Upload settings
 # =============================================================================
-SCRIPTS := animeworld mslearn
+SCRIPTS := animeworld examheist mslearn
+UPDATE_URL    := http://menudock.altervista.org/domus
 
 include ./build-tools/common.mk
 include $(BUILD_TOOLS_FOLDER)/common_linters.mk
@@ -42,6 +43,10 @@ dev: userscript.dev ## Run the development server
 
 .PHONY: clean
 clean: lint.clean ## Clean linter caches
+
+.PHONY: upload
+upload: build ## Upload dist/ files to Altervista under domus/
+	@for f in dist/*; do altervista-push "$$f" domus; done
 
 .PHONY: update
 update: git.submodules ## Refresh the build-tools submodule

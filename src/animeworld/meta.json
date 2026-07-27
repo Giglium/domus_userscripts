@@ -1,6 +1,6 @@
 {
   "name": "AnimeWorld Downloader",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "match": [
     "https://www.animeworld.ac/play/*"
   ],
@@ -15,6 +15,6 @@
     "www.animeworld.ac",
     "*"
   ],
-  "updateURL": "https://github.com/Giglium/domus-userscripts/raw/refs/heads/main/dist//dist/animeworld/meta.json",
-  "downloadURL": "https://github.com/Giglium/domus-userscripts/raw/refs/heads/main/dist/animeworld.user.js"
+  "updateURL": "http://menudock.altervista.org/domus/animeworld.meta.js",
+  "downloadURL": "http://menudock.altervista.org/domus/animeworld.user.js"
 }

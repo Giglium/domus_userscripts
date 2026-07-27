@@ -3,15 +3,15 @@
  * @param {Error} error
  * @returns {{ title: string, detail: string }}
  */
-export function formatError(error) {
+export function formatError (error) {
   if (error instanceof Error) {
     return {
-      title: error.message || "Unknown error",
-      detail: error.stack || "",
-    };
+      title: error.message || 'Unknown error',
+      detail: error.stack || ''
+    }
   }
   return {
-    title: "Unexpected error",
-    detail: String(error),
-  };
+    title: 'Unexpected error',
+    detail: String(error)
+  }
 }

@@ -3,9 +3,9 @@
  * @param {() => void} onClick - Callback when the button is clicked.
  * @returns {HTMLButtonElement}
  */
-export function createDownloadButton(onClick) {
-  const btn = document.createElement("button");
-  btn.className = "button is-primary is-medium domus-download-btn";
+export function createDownloadButton (onClick) {
+  const btn = document.createElement('button')
+  btn.className = 'button is-primary is-medium domus-download-btn'
   btn.innerHTML = `
     <span class="icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -16,8 +16,8 @@ export function createDownloadButton(onClick) {
       </svg>
     </span>
     <span>Download MP4</span>
-  `;
+  `
 
-  btn.addEventListener("click", onClick);
-  return btn;
+  btn.addEventListener('click', onClick)
+  return btn
 }
