@@ -1,6 +1,6 @@
 {
   "name": "MS Learn Quiz Extractor",
-  "version": "1.2.0",
+  "version": "1.2.4",
   "match": [
     "https://learn.microsoft.com/*/training/modules/*"
   ],
