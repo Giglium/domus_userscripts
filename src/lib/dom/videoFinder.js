@@ -8,48 +8,48 @@
  *
  * @returns {Promise<string|null>}
  */
-export async function findVideoUrl () {
+export async function findVideoUrl() {
   // Strategy 1: Check if there's already an iframe loaded in the player
   const playerIframe =
-    document.querySelector('#player iframe') ||
-    document.getElementById('player-iframe')
+    document.querySelector("#player iframe") ||
+    document.getElementById("player-iframe");
   if (playerIframe && playerIframe.src) {
-    const url = await fetchAndExtractVideo(playerIframe.src)
-    if (url) return url
+    const url = await fetchAndExtractVideo(playerIframe.src);
+    if (url) return url;
   }
 
   // Strategy 2: Check for a <video> element already in the DOM
-  const directUrl = extractVideoFromDocument(document)
-  if (directUrl) return directUrl
+  const directUrl = extractVideoFromDocument(document);
+  if (directUrl) return directUrl;
 
   // Strategy 3: Get the episode ID and fetch the video URL from the API
-  const episodeId = getActiveEpisodeId()
+  const episodeId = getActiveEpisodeId();
   if (episodeId) {
-    const url = await fetchVideoFromApi(episodeId)
-    if (url) return url
+    const url = await fetchVideoFromApi(episodeId);
+    if (url) return url;
   }
 
-  return null
+  return null;
 }
 
 /**
  * Gets the active episode's data-id from the episode list.
  * @returns {string|null}
  */
-function getActiveEpisodeId () {
+function getActiveEpisodeId() {
   // The active episode link has class "active"
-  const activeEp = document.querySelector('.server.active .episodes a.active')
+  const activeEp = document.querySelector(".server.active .episodes a.active");
   if (activeEp) {
-    return activeEp.getAttribute('data-id')
+    return activeEp.getAttribute("data-id");
   }
 
   // Fallback: get from the player div
-  const player = document.getElementById('player')
+  const player = document.getElementById("player");
   if (player) {
-    return player.getAttribute('data-id')
+    return player.getAttribute("data-id");
   }
 
-  return null
+  return null;
 }
 
 /**
@@ -58,45 +58,45 @@ function getActiveEpisodeId () {
  * @param {string} episodeId
  * @returns {Promise<string|null>}
  */
-async function fetchVideoFromApi (episodeId) {
+async function fetchVideoFromApi(episodeId) {
   // Try the info endpoint
-  const infoUrl = `${window.location.origin}/api/episode/info?id=${episodeId}`
-  const data = await gmFetch(infoUrl)
+  const infoUrl = `${window.location.origin}/api/episode/info?id=${episodeId}`;
+  const data = await gmFetch(infoUrl);
   if (data) {
     // The API may return a grabber URL or direct link
     if (data.grabber) {
-      const grabberData = await gmFetch(data.grabber)
+      const grabberData = await gmFetch(data.grabber);
       if (grabberData && Array.isArray(grabberData)) {
         const mp4 = grabberData.find(
-          (item) => item.file && item.file.includes('.mp4')
-        )
-        if (mp4) return mp4.file
+          (item) => item.file && item.file.includes(".mp4"),
+        );
+        if (mp4) return mp4.file;
         // Return first available file
         if (grabberData.length > 0 && grabberData[0].file) {
-          return grabberData[0].file
+          return grabberData[0].file;
         }
       }
     }
     if (data.target) {
       // target might be the iframe URL
-      const videoUrl = await fetchAndExtractVideo(data.target)
-      if (videoUrl) return videoUrl
+      const videoUrl = await fetchAndExtractVideo(data.target);
+      if (videoUrl) return videoUrl;
       // Or it might be a direct MP4 link
-      if (data.target.includes('.mp4')) return data.target
-      return data.target
+      if (data.target.includes(".mp4")) return data.target;
+      return data.target;
     }
   }
 
   // Try the server endpoint
-  const serverUrl = `${window.location.origin}/api/episode/serverPlayerAnime498?id=${episodeId}`
-  const serverData = await gmFetch(serverUrl)
+  const serverUrl = `${window.location.origin}/api/episode/serverPlayerAnime498?id=${episodeId}`;
+  const serverData = await gmFetch(serverUrl);
   if (serverData && serverData.target) {
-    const videoUrl = await fetchAndExtractVideo(serverData.target)
-    if (videoUrl) return videoUrl
-    return serverData.target
+    const videoUrl = await fetchAndExtractVideo(serverData.target);
+    if (videoUrl) return videoUrl;
+    return serverData.target;
   }
 
-  return null
+  return null;
 }
 
 /**
@@ -104,33 +104,33 @@ async function fetchVideoFromApi (episodeId) {
  * @param {string} url
  * @returns {Promise<object|null>}
  */
-function gmFetch (url) {
+function gmFetch(url) {
   return new Promise((resolve) => {
-    if (typeof GM_xmlhttpRequest === 'undefined') {
+    if (typeof GM_xmlhttpRequest === "undefined") {
       // Fallback to fetch for same-origin requests
-      fetch(url, { credentials: 'include' })
+      fetch(url, { credentials: "include" })
         .then((r) => r.json())
         .then(resolve)
-        .catch(() => resolve(null))
-      return
+        .catch(() => resolve(null));
+      return;
     }
 
     GM_xmlhttpRequest({
-      method: 'GET',
+      method: "GET",
       url,
       headers: {
-        'X-Requested-With': 'XMLHttpRequest'
+        "X-Requested-With": "XMLHttpRequest",
       },
       onload: (response) => {
         try {
-          resolve(JSON.parse(response.responseText))
+          resolve(JSON.parse(response.responseText));
         } catch (e) {
-          resolve(null)
+          resolve(null);
         }
       },
-      onerror: () => resolve(null)
-    })
-  })
+      onerror: () => resolve(null),
+    });
+  });
 }
 
 /**
@@ -138,24 +138,24 @@ function gmFetch (url) {
  * @param {Document} doc
  * @returns {string|null}
  */
-function extractVideoFromDocument (doc) {
+function extractVideoFromDocument(doc) {
   // <video> with <source type="video/mp4">
-  const source = doc.querySelector("video source[type='video/mp4']")
-  if (source && source.src) return source.src
+  const source = doc.querySelector("video source[type='video/mp4']");
+  if (source && source.src) return source.src;
 
   // <video src="...">
-  const video = doc.querySelector('video[src]')
-  if (video && video.src) return video.src
+  const video = doc.querySelector("video[src]");
+  if (video && video.src) return video.src;
 
   // <video> currentSrc
-  const anyVideo = doc.querySelector('video')
-  if (anyVideo && anyVideo.currentSrc) return anyVideo.currentSrc
+  const anyVideo = doc.querySelector("video");
+  if (anyVideo && anyVideo.currentSrc) return anyVideo.currentSrc;
 
   // <source> without type attribute
-  const anySource = doc.querySelector('video source')
-  if (anySource && anySource.src) return anySource.src
+  const anySource = doc.querySelector("video source");
+  if (anySource && anySource.src) return anySource.src;
 
-  return null
+  return null;
 }
 
 /**
@@ -163,61 +163,61 @@ function extractVideoFromDocument (doc) {
  * @param {string} url
  * @returns {Promise<string|null>}
  */
-function fetchAndExtractVideo (url) {
+function fetchAndExtractVideo(url) {
   return new Promise((resolve) => {
-    if (typeof GM_xmlhttpRequest === 'undefined') {
-      resolve(null)
-      return
+    if (typeof GM_xmlhttpRequest === "undefined") {
+      resolve(null);
+      return;
     }
 
     GM_xmlhttpRequest({
-      method: 'GET',
+      method: "GET",
       url,
       onload: (response) => {
-        const html = response.responseText
+        const html = response.responseText;
 
         // Look for <source src="...">
-        const sourceMatch = html.match(/<source[^>]+src=["']([^"']+)["']/i)
+        const sourceMatch = html.match(/<source[^>]+src=["']([^"']+)["']/i);
         if (sourceMatch) {
-          resolve(sourceMatch[1])
-          return
+          resolve(sourceMatch[1]);
+          return;
         }
 
         // Look for <video src="...">
-        const videoSrcMatch = html.match(/<video[^>]+src=["']([^"']+)["']/i)
+        const videoSrcMatch = html.match(/<video[^>]+src=["']([^"']+)["']/i);
         if (videoSrcMatch) {
-          resolve(videoSrcMatch[1])
-          return
+          resolve(videoSrcMatch[1]);
+          return;
         }
 
         // Look for file: "..." pattern (common in JS-based players)
-        const fileMatch = html.match(/file:\s*["']([^"']+)["']/i)
+        const fileMatch = html.match(/file:\s*["']([^"']+)["']/i);
         if (fileMatch) {
-          resolve(fileMatch[1])
-          return
+          resolve(fileMatch[1]);
+          return;
         }
 
         // Look for url: "..." or src: "..." with video extensions
         const urlMatch = html.match(
-          /(?:url|src|source|file)\s*[:=]\s*["']([^"']+\.(?:mp4|m3u8)[^"']*)["']/i
-        )
+          /(?:url|src|source|file)\s*[:=]\s*["']([^"']+\.(?:mp4|m3u8)[^"']*)["']/i,
+        );
         if (urlMatch) {
-          resolve(urlMatch[1])
-          return
+          resolve(urlMatch[1]);
+          return;
         }
 
         // Look for any URL with video extensions
         const mp4Match = html.match(
-          /["'](https?:\/\/[^"'\s]+\.(?:mp4|m3u8)[^"'\s]*)["']/i
-        )
+          /["'](https?:\/\/[^"'\s]+\.(?:mp4|m3u8)[^"'\s]*)["']/i,
+        );
         if (mp4Match) {
-          resolve(mp4Match[1])
-          return
+          resolve(mp4Match[1]);
+          return;
         }
 
-        resolve(null)
+        resolve(null);
       },
-      onerror: () => resolve(null)
-    })
-  })
+      onerror: () => resolve(null),
+    });
+  });
 }

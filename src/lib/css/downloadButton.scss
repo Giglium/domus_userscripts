@@ -1,0 +1,6 @@
+@use "sass:meta";
+
+.domus-ui {
+  @include meta.load-css("bulma/sass/elements/button");
+  @include meta.load-css("bulma/sass/elements/icon");
+}

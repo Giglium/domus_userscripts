@@ -1,52 +1,67 @@
-TECHNOLOGY := javascript
+SHELL := /bin/sh
+.DEFAULT_GOAL := help
+
 VERSION := $(shell jq -r '.version' package.json)
-SUPER_LINTER_FMT := -e FIX_MARKDOWN=true -e FIX_JSON=true -e FIX_YAML_PRETTIER=true -e FIX_CSS=true -e FIX_CSS_PRETTIER=true -e FIX_JAVASCRIPT_ES=true -e FIX_JAVASCRIPT_PRETTIER=true -e FIX_JAVASCRIPT_STANDARD=true -e FIX_JSON_PRETTIER=true
+REPOSITORY := $(shell jq -r '.repository.url | sub("\\.git$$"; "")' package.json)
+OWNER := $(shell printf '%s' '$(REPOSITORY)' | cut -d/ -f4)
+REPO := $(shell printf '%s' '$(REPOSITORY)' | cut -d/ -f5)
+UPDATE_URL ?= http://menudock.altervista.org/domus
+UPLOADER ?= altervista-push
+UPLOAD_ARGS ?= domus
+SCRIPTS := $(notdir $(patsubst %/,%,$(dir $(wildcard src/*/index.js))))
 
-# =============================================================================
-# Publication / Upload settings
-# =============================================================================
-SCRIPTS := animeworld examheist mslearn
-UPDATE_URL    := http://menudock.altervista.org/domus
+.PHONY: help init update-metadata build serve fmt lint test test.browser clean upload all
+help: ## Show available targets
+	@sed -n 's/^\([a-zA-Z.]*\):.*## /\1 - /p' Makefile
 
-include ./build-tools/common.mk
-include $(BUILD_TOOLS_FOLDER)/common_linters.mk
-include $(BUILD_TOOLS_FOLDER)/$(TECHNOLOGY)/$(TECHNOLOGY).mk
-include $(BUILD_TOOLS_FOLDER)/$(TECHNOLOGY)/userscript.mk
-include $(BUILD_TOOLS_FOLDER)/git.mk
+init: ## Install dependencies and configure the formatting hook
+	$(if $(CI),bun ci,bun install) --ignore-scripts
+	CI=1 bun install --cwd node_modules/webpack-monkey
+	bun run --cwd node_modules/webpack-monkey build
+	@chmod +x .githooks/pre-commit
+	@if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then \
+		current=$$(git config --local --get core.hooksPath || :); \
+		if [ -n "$$current" ] && [ "$$current" != .githooks ]; then \
+			echo "Existing core.hooksPath: $$current; install .githooks/pre-commit manually" >&2; \
+		else \
+			git config --local core.hooksPath .githooks; \
+		fi; \
+	fi
 
-# Detect the OS
-ifeq ($(OS),macos)
-export DOCKER_DEFAULT_PLATFORM := linux/amd64
-endif
+update-metadata: ## Refresh script versions and URLs from project settings
+	@for script in $(SCRIPTS); do \
+		file="src/$$script/meta.json"; \
+		jq --arg version '$(VERSION)' \
+		   --arg update_url '$(UPDATE_URL)/'"$$script"'.meta.js' \
+		   --arg download_url '$(UPDATE_URL)/'"$$script"'.user.js' \
+		   '.version = $$version | .updateURL = $$update_url | .downloadURL = $$download_url' \
+		   "$$file" > "$$file.tmp" && mv "$$file.tmp" "$$file" || exit 1; \
+	done
+	@bunx prettier --write $(addprefix src/,$(addsuffix /meta.json,$(SCRIPTS)))
 
-# =============================================================================
-# Top-level targets
-# =============================================================================
+build: update-metadata ## Sync metadata and compile all userscripts
+	bun run build
 
-.PHONY: all
-all: build ## Build every userscript
+serve: ## Start Webpack development server
+	bun run serve
 
-.PHONY: fmt
-fmt: javascript.fmt ## Format JS/CSS/JSON sources
+fmt: ## Format sources
+	$(if $(STAGED),@git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 bunx prettier --write --ignore-unknown --,bun run fmt)
 
-.PHONY: lint
-lint: lint.superlinter ## Run static analysis
+lint: ## Run local static analysis and formatting checks
+	bun run lint
 
-.PHONY: init
-init: javascript.init userscript.init ## Install dev dependencies
+test: build ## Build and run unit tests
+	bun run test
 
-.PHONY: build
-build: userscript.build ## Compile userscripts into dist/
+test.browser: build ## Build and run browser smoke tests
+	bun run test:browser
 
-.PHONY: dev
-dev: userscript.dev ## Run the development server
+clean: ## Remove generated build files
+	@rm -rf dist
 
-.PHONY: clean
-clean: lint.clean ## Clean linter caches
+upload: build ## Upload dist/* to the configured host
+	@if [ -z "$(strip $(UPLOADER))" ]; then echo 'Set UPLOADER to your upload command' >&2; exit 1; fi
+	@for file in dist/*; do $(UPLOADER) "$$file" $(UPLOAD_ARGS) || exit 1; done
 
-.PHONY: upload
-upload: build ## Upload dist/ files to Altervista under domus/
-	@for f in dist/*; do altervista-push "$$f" domus; done
-
-.PHONY: update
-update: git.submodules ## Refresh the build-tools submodule
+all: build upload

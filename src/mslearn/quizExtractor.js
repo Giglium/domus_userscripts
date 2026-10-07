@@ -7,21 +7,21 @@
  *
  * @returns {Array<{question: string, options: string[], answer: string, explanation: string}>}
  */
-export function extractQuiz () {
-  const questions = []
+export function extractQuiz() {
+  const questions = [];
 
   const quizItems = document.querySelectorAll(
-    '.quiz-question, .module-assessment-question'
-  )
+    ".quiz-question, .module-assessment-question",
+  );
 
   for (const item of quizItems) {
-    const extracted = extractQuestion(item)
+    const extracted = extractQuestion(item);
     if (extracted) {
-      questions.push(extracted)
+      questions.push(extracted);
     }
   }
 
-  return questions
+  return questions;
 }
 
 /**
@@ -29,51 +29,51 @@ export function extractQuiz () {
  * @param {Element} questionEl
  * @returns {{question: string, options: string[], answer: string, explanation: string} | null}
  */
-function extractQuestion (questionEl) {
+function extractQuestion(questionEl) {
   // Get the question text
   const titleEl = questionEl.querySelector(
-    "[id^='quiz-question-'] p, .quiz-question-title p"
-  )
-  if (!titleEl) return null
+    "[id^='quiz-question-'] p, .quiz-question-title p",
+  );
+  if (!titleEl) return null;
 
-  const question = htmlToMarkdown(titleEl)
+  const question = htmlToMarkdown(titleEl);
 
   // Get all options
-  const options = []
-  let answer = ''
-  let explanation = ''
+  const options = [];
+  let answer = "";
+  let explanation = "";
 
-  const choiceLabels = questionEl.querySelectorAll('.quiz-choice')
+  const choiceLabels = questionEl.querySelectorAll(".quiz-choice");
 
   for (const label of choiceLabels) {
-    const textEl = label.querySelector('.radio-label-text')
-    if (!textEl) continue
+    const textEl = label.querySelector(".radio-label-text");
+    if (!textEl) continue;
 
-    const optionText = htmlToMarkdown(textEl)
-    options.push(optionText)
+    const optionText = htmlToMarkdown(textEl);
+    options.push(optionText);
 
     // Check if this is the correct answer
-    if (label.classList.contains('is-correct')) {
-      answer = optionText
+    if (label.classList.contains("is-correct")) {
+      answer = optionText;
     }
 
     // Explanation is always the sibling after the label
-    const explanationEl = label.nextElementSibling
+    const explanationEl = label.nextElementSibling;
     if (
-      label.classList.contains('is-correct') &&
+      label.classList.contains("is-correct") &&
       explanationEl &&
-      explanationEl.classList.contains('quiz-choice-explanation')
+      explanationEl.classList.contains("quiz-choice-explanation")
     ) {
-      const expText = htmlToMarkdown(explanationEl)
+      const expText = htmlToMarkdown(explanationEl);
       if (expText) {
-        explanation = expText
+        explanation = expText;
       }
     }
   }
 
-  if (!question || options.length === 0) return null
+  if (!question || options.length === 0) return null;
 
-  return { question, options, answer, explanation }
+  return { question, options, answer, explanation };
 }
 
 /**
@@ -87,34 +87,34 @@ function extractQuestion (questionEl) {
  * @param {Element} el
  * @returns {string}
  */
-function htmlToMarkdown (el) {
-  let result = ''
+function htmlToMarkdown(el) {
+  let result = "";
 
   for (const node of el.childNodes) {
     if (node.nodeType === Node.TEXT_NODE) {
-      result += node.textContent
+      result += node.textContent;
     } else if (node.nodeType === Node.ELEMENT_NODE) {
-      const tag = node.tagName.toLowerCase()
+      const tag = node.tagName.toLowerCase();
 
-      if (tag === 'code') {
-        result += '`' + node.textContent + '`'
-      } else if (tag === 'strong' || tag === 'b') {
-        result += '**' + htmlToMarkdown(node) + '**'
-      } else if (tag === 'em' || tag === 'i') {
-        result += '*' + htmlToMarkdown(node) + '*'
-      } else if (tag === 'a') {
-        const href = node.getAttribute('href') || ''
-        result += '[' + htmlToMarkdown(node) + '](' + href + ')'
-      } else if (tag === 'br') {
-        result += '\n'
-      } else if (tag === 'p') {
-        result += htmlToMarkdown(node)
+      if (tag === "code") {
+        result += "`" + node.textContent + "`";
+      } else if (tag === "strong" || tag === "b") {
+        result += "**" + htmlToMarkdown(node) + "**";
+      } else if (tag === "em" || tag === "i") {
+        result += "*" + htmlToMarkdown(node) + "*";
+      } else if (tag === "a") {
+        const href = node.getAttribute("href") || "";
+        result += "[" + htmlToMarkdown(node) + "](" + href + ")";
+      } else if (tag === "br") {
+        result += "\n";
+      } else if (tag === "p") {
+        result += htmlToMarkdown(node);
       } else {
         // Fallback: recurse into unknown elements
-        result += htmlToMarkdown(node)
+        result += htmlToMarkdown(node);
       }
     }
   }
 
-  return result.trim()
+  return result.trim();
 }

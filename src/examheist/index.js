@@ -1,7 +1,9 @@
-import '../lib/css/style.scss'
-import { bootstrap } from '../lib/core/bootstrap.js'
+import { bootstrap } from "../lib/core/bootstrap.js";
+import "../lib/css/downloadButton.scss";
+import { downloadButton } from "../lib/css/downloadButton.module.scss";
+import { getUiRoot } from "../lib/dom/uiRoot.js";
 
-const STYLE_ID = 'domus-examheist-hide-style'
+const STYLE_ID = "domus-examheist-hide-style";
 
 /**
  * Injects a <style> element that hides correct answers.
@@ -9,11 +11,11 @@ const STYLE_ID = 'domus-examheist-hide-style'
  *   highlight colour the page applies.
  * - `.question-answer-wrapper` is hidden entirely.
  */
-function applyHiddenStyle () {
-  if (document.getElementById(STYLE_ID)) return
+function applyHiddenStyle() {
+  if (document.getElementById(STYLE_ID)) return;
 
-  const style = document.createElement('style')
-  style.id = STYLE_ID
+  const style = document.createElement("style");
+  style.id = STYLE_ID;
   style.textContent = `
     .correct-hidden {
       color: inherit !important;
@@ -21,26 +23,26 @@ function applyHiddenStyle () {
     .question-answer-wrapper {
       opacity: 0 !important;
     }
-  `
-  document.head.appendChild(style)
+  `;
+  document.head.appendChild(style);
 }
 
 /**
  * Removes the injected <style> element, revealing answers again.
  */
-function removeHiddenStyle () {
-  const style = document.getElementById(STYLE_ID)
-  if (style) style.remove()
+function removeHiddenStyle() {
+  const style = document.getElementById(STYLE_ID);
+  if (style) style.remove();
 }
 
 bootstrap(() => {
   // Apply hiding immediately on page load
-  applyHiddenStyle()
+  applyHiddenStyle();
 
-  let hidden = true
+  let hidden = true;
 
-  const btn = document.createElement('button')
-  btn.className = 'button is-primary is-medium domus-download-btn'
+  const btn = document.createElement("button");
+  btn.className = `button is-primary is-medium ${downloadButton}`;
   btn.innerHTML = `
     <span class="icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -50,18 +52,18 @@ bootstrap(() => {
       </svg>
     </span>
     <span>Show Answers</span>
-  `
+  `;
 
-  btn.addEventListener('click', () => {
+  btn.addEventListener("click", () => {
     if (hidden) {
-      removeHiddenStyle()
-      btn.querySelector('span:last-child').textContent = 'Hide Answers'
+      removeHiddenStyle();
+      btn.querySelector("span:last-child").textContent = "Hide Answers";
     } else {
-      applyHiddenStyle()
-      btn.querySelector('span:last-child').textContent = 'Show Answers'
+      applyHiddenStyle();
+      btn.querySelector("span:last-child").textContent = "Show Answers";
     }
-    hidden = !hidden
-  })
+    hidden = !hidden;
+  });
 
-  document.body.appendChild(btn)
-})
+  getUiRoot().appendChild(btn);
+});

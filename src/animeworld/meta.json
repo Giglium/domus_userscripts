@@ -1,20 +1,11 @@
 {
   "name": "AnimeWorld Downloader",
-  "version": "1.2.4",
-  "match": [
-    "https://www.animeworld.ac/play/*"
-  ],
+  "version": "2.0.2",
+  "match": ["https://www.animeworld.ac/play/*"],
   "sandbox": "DOM",
   "inject-into": "content",
-  "grant": [
-    "GM_download",
-    "GM_xmlhttpRequest"
-  ],
-  "connect": [
-    "animeworld.ac",
-    "www.animeworld.ac",
-    "*"
-  ],
+  "grant": ["GM_xmlhttpRequest"],
+  "connect": ["animeworld.ac", "www.animeworld.ac", "*"],
   "updateURL": "http://menudock.altervista.org/domus/animeworld.meta.js",
   "downloadURL": "http://menudock.altervista.org/domus/animeworld.user.js"
 }

@@ -1,0 +1,31 @@
+name: Sync Template
+
+on:
+  #  schedule:
+  #    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    if: github.repository != 'Giglium/userscripts-template'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Check template access
+        env:
+          TEMPLATE_SYNC_TOKEN: ${{ secrets.TEMPLATE_SYNC_TOKEN }}
+        run: test -n "$TEMPLATE_SYNC_TOKEN"
+      - uses: AndreasAugustin/actions-template-sync@6e1d0089686f8940604fc15baae62367bf6ee860 # v2.6.0
+        with:
+          source_repo_path: Giglium/userscripts-template
+          source_gh_token: ${{ secrets.TEMPLATE_SYNC_TOKEN }}
+          target_gh_token: ${{ secrets.TEMPLATE_SYNC_TOKEN }}
+          pr_title: "chore: sync userscripts template"

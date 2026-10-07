@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+cd "$(git rev-parse --show-toplevel)"
+
+if git diff --cached --quiet --diff-filter=ACMR; then
+  exit 0
+fi
+
+if ! git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 -n 1 git diff --quiet --; then
+  echo "Staged files contain unstaged edits; stage them first before formatting" >&2
+  exit 1
+fi
+
+make fmt STAGED=1
+git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 git add --

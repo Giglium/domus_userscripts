@@ -1,0 +1,8 @@
+@use "sass:meta";
+
+.domus-ui {
+  @include meta.load-css("bulma/sass/elements/delete");
+  @include meta.load-css("bulma/sass/elements/notification");
+  @include meta.load-css("bulma/sass/elements/title");
+  @include meta.load-css("bulma/sass/components/modal");
+}
