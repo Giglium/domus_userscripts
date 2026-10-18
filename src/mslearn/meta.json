@@ -1,6 +1,6 @@
 {
   "name": "MS Learn Quiz Extractor",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "match": ["https://learn.microsoft.com/*/training/modules/*"],
   "sandbox": "DOM",
   "inject-into": "content",
