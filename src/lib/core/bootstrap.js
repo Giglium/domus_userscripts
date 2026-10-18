@@ -1,4 +1,3 @@
-import { showErrorOverlay } from "./errorOverlay.js";
 import { logger } from "./logger.js";
 
 /**
@@ -7,6 +6,8 @@ import { logger } from "./logger.js";
  * Catches:
  *  - synchronous errors thrown by `fn`
  *  - rejections from a Promise returned by `fn`
+ *
+ * Errors are logged through {@link logger}; there is no on-page overlay.
  *
  * @param {() => void | Promise<void>} fn
  */
@@ -24,13 +25,4 @@ export function bootstrap(fn) {
 
 function handle(error) {
   logger.error("Userscript error", error);
-  if (document.body) {
-    showErrorOverlay(error);
-  } else {
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => showErrorOverlay(error),
-      { once: true },
-    );
-  }
 }
