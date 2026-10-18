@@ -16,7 +16,7 @@
         "sass": "^1.99.0",
         "sass-loader": "^16.0.7",
         "webpack": "^5.109.0",
-        "webpack-cli": "^7.2.0",
+        "webpack-cli": "^7.2.3",
         "webpack-dev-server": "^5.2.0",
         "webpack-monkey": "github:Giglium/webpack-monkey",
       },
@@ -769,7 +769,7 @@
 
     "webpack": ["webpack@5.109.0", "", { "dependencies": { "@types/estree": "^1.0.8", "@types/json-schema": "^7.0.15", "@webassemblyjs/ast": "^1.14.1", "@webassemblyjs/wasm-edit": "^1.14.1", "@webassemblyjs/wasm-parser": "^1.14.1", "acorn": "^8.16.0", "browserslist": "^4.28.1", "chrome-trace-event": "^1.0.2", "enhanced-resolve": "^5.24.2", "es-module-lexer": "^2.1.0", "eslint-scope": "5.1.1", "events": "^3.2.0", "graceful-fs": "^4.2.11", "mime-db": "^1.54.0", "minimizer-webpack-plugin": "^5.6.1", "neo-async": "^2.6.2", "schema-utils": "^4.3.3", "tapable": "^2.3.0", "watchpack": "^2.5.2", "webpack-sources": "^3.5.1" }, "bin": "bin/webpack.js" }, "sha512-vomrngskVVXEZF9sMZfYAd4pXZUnfaWdJGlF+BTNF+gJBCKYCQBnOeVPlrh39Ewl7nlCsirDplMy6o5g9xJHBg=="],
 
-    "webpack-cli": ["webpack-cli@7.2.1", "", { "dependencies": { "@discoveryjs/json-ext": "^1.1.0", "commander": "^14.0.3", "cross-spawn": "^7.0.6", "envinfo": "^7.21.0", "import-local": "^3.2.0", "interpret": "^3.1.1", "rechoir": "^0.8.0", "webpack-merge": "^6.0.1" }, "peerDependencies": { "js-yaml": "^4.0.0 || ^5.0.0", "json5": "^2.2.3", "toml": "^3.0.0 || ^4.0.0", "webpack": "^5.101.0", "webpack-bundle-analyzer": "^4.0.0 || ^5.0.0", "webpack-dev-server": "^5.0.0 || ^6.0.0" }, "optionalPeers": ["js-yaml", "json5", "toml", "webpack-bundle-analyzer", "webpack-dev-server"], "bin": "bin/cli.js" }, "sha512-YwSGbcZdfz12DM8JIseVPr3oBb09IgVCVc4vY3oDvZnI/mALTGPAP1QiqOi4/bBLSJrRHaqDIXeHcNA0+G38aw=="],
+    "webpack-cli": ["webpack-cli@7.2.3", "", { "dependencies": { "@discoveryjs/json-ext": "^1.1.0", "commander": "^14.0.3", "cross-spawn": "^7.0.6", "envinfo": "^7.21.0", "import-local": "^3.2.0", "interpret": "^3.1.1", "rechoir": "^0.8.0", "webpack-merge": "^6.0.1" }, "peerDependencies": { "js-yaml": "^4.0.0 || ^5.0.0", "json5": "^2.2.3", "toml": "^3.0.0 || ^4.0.0 || ^5.0.0", "webpack": "^5.101.0", "webpack-bundle-analyzer": "^4.0.0 || ^5.0.0", "webpack-dev-server": "^5.0.0 || ^6.0.0" }, "optionalPeers": ["js-yaml", "json5", "toml", "webpack-bundle-analyzer", "webpack-dev-server"], "bin": { "webpack-cli": "bin/cli.js" } }, "sha512-vDFU7jrfCctnN7jJQWPl+V26B51GLp11prVZXg50oeonsgeBzSTJEWmXkjHsOjTgMjlPOQM8GWLh33X9RN/0ow=="],
 
     "webpack-dev-middleware": ["webpack-dev-middleware@7.4.5", "", { "dependencies": { "colorette": "^2.0.10", "memfs": "^4.43.1", "mime-types": "^3.0.1", "on-finished": "^2.4.1", "range-parser": "^1.2.1", "schema-utils": "^4.0.0" }, "peerDependencies": { "webpack": "^5.0.0" }, "optionalPeers": ["webpack"] }, "sha512-uxQ6YqGdE4hgDKNf7hUiPXOdtkXvBJXrfEGYSx7P7LC8hnUYGK70X6xQXUvXeNyBDDcsiQXpG2m3G9vxowaEuA=="],
 
