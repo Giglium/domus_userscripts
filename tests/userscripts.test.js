@@ -47,7 +47,6 @@ describe("Domus userscripts", () => {
       /\.domus-ui \.button\.[\w-]+\{position:fixed;top:16px;right:16px;z-index:99999\}/,
     );
     expect(examHeist).toContain(".domus-ui .button");
-    expect(examHeist).toMatch(/\.domus-ui \.modal\{/);
   });
 
   test("every userscript includes its metadata and bundled CSS", () => {

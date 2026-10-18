@@ -118,9 +118,14 @@ test("built MS Learn script exports module assessment questions", async ({
   expect(download.content).toContain("    - **az group list**");
 });
 
-test("built MS Learn script reports startup errors as text", async ({
+test("built MS Learn script logs startup errors without rendering UI", async ({
   page,
 }) => {
+  const consoleErrors = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") consoleErrors.push(message.text());
+  });
+
   await page.setContent("<main></main>");
   await page.evaluate(() => {
     window.GM_addStyle = (css) => {
@@ -129,16 +134,15 @@ test("built MS Learn script reports startup errors as text", async ({
       document.head.appendChild(style);
     };
     document.querySelectorAll = () => {
-      throw new Error("<img src=x onerror=alert(1)>");
+      throw new Error("boom");
     };
   });
   await page.addScriptTag({
     path: path.resolve(__dirname, "../../dist/mslearn.user.js"),
   });
 
-  const title = page.locator(".domus-ui .modal .title");
-  await expect(title).toHaveText("<img src=x onerror=alert(1)>");
-  await expect(title.locator("img")).toHaveCount(0);
-  await page.getByRole("button", { name: "close" }).click();
-  await expect(page.locator(".domus-ui .modal")).toHaveCount(0);
+  await expect
+    .poll(() => consoleErrors.some((text) => text.includes("boom")))
+    .toBe(true);
+  await expect(page.locator(".modal")).toHaveCount(0);
 });
