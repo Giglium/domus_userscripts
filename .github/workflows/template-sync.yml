@@ -1,8 +1,6 @@
 name: Sync Template
 
 on:
-  #  schedule:
-  #    - cron: "17 5 * * 1"
   workflow_dispatch:
 
 permissions:

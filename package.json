@@ -1,6 +1,6 @@
 {
   "name": "domus-userscripts",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "private": true,
   "description": "",
   "author": "Giglium",
@@ -26,12 +26,12 @@
     "eslint": "^10.03.0",
     "globals": "^16.0.0",
     "mini-css-extract-plugin": "^2.10.2",
-    "prettier": "3.3.3",
-    "sass": "^1.99.0",
+    "prettier": "3.9.10",
+    "sass": "^1.105.1",
     "sass-loader": "^16.0.7",
     "webpack": "^5.109.0",
-    "webpack-cli": "^7.2.0",
-    "webpack-dev-server": "^5.2.0",
+    "webpack-cli": "^7.2.3",
+    "webpack-dev-server": "^6.0.0",
     "webpack-monkey": "github:Giglium/webpack-monkey"
   }
 }
